@@ -1,0 +1,39 @@
+#custom function to measure precision
+precision <- function(predictedLabel, goodLabel){
+len<-length(predictedLabel)
+tot<-0
+	for(i in 1:len) {
+		if (predictedLabel[i]==goodLabel[i]) {
+			tot<-tot+1
+			#print(paste("Positive", "Predicted--->",predictedLabel[i],goodLabel[i],"<---Actual", sep = " "))
+		}else{
+			#print(paste("Negative","Predicted--->",predictedLabel[i],goodLabel[i],"<---Actual", sep = " "))
+		}
+	}
+	pct= tot/len*100
+	print(paste(signif(pct,digits=4),"%", sep = ""))
+}
+
+#load library
+library(e1071)
+
+#load csv file
+myFil<-"AID1608red_train.csv"
+myDir<-"C:/Users/Ubaby/Desktop/BIO DATA/readyToTest/bioassay/"
+dir<-paste(myDir, myFil, sep = "")
+data=read.csv(dir, TRUE,",")
+
+#assign variables, class label is a name of attribute, but caught as whole column
+x <- data
+y <- Outcome ~ .
+
+#train
+model <- svm(y,x)
+
+#predict
+pred <- predict(model, x)
+
+#measure precision
+precision(data[[length(data)]],pred) 
+
+
